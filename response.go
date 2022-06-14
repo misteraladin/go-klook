@@ -9,22 +9,11 @@ type LoginResponse struct {
 	ErrorDescription string `json:"error_description"`
 }
 
-type SKU struct {
-	SKUID string  `json:"sku_id"`
-	Title string  `json:"title"`
-	Price float32 `json:"price"`
-}
-
 type SKUOrder struct {
 	SKUID    uint   `json:"sku_id"`
 	Quantity uint   `json:"quantity"`
 	SKUPrice string `json:"sku_price"`
 	Currency string `json:"currency"`
-}
-
-type SKUInventory struct {
-	SKUID           string `json:"sku_id"`
-	InventoryStatus int    `json:"inventory_status"`
 }
 
 type SKUProduct struct {
@@ -33,19 +22,6 @@ type SKUProduct struct {
 	SKUMinPax uint   `json:"sku_min_pax"`
 	SKUMaxPax uint   `json:"sku_max_pax"`
 	Required  bool   `json:"required"`
-}
-
-type Schedule struct {
-	ProductID      string         `json:"product_id"`
-	Date           string         `json:"date"`
-	TimesSlot      string         `json:"times_slot"`
-	SKUInventories []SKUInventory `json:"sku_inventory"`
-}
-
-type Schedules struct {
-	Schedules []Schedule    `json:"schedules"`
-	SKUS      []SKU         `json:"skus"`
-	Error     ErrorResponse `json:"error"`
 }
 
 type ErrorResponse struct {
@@ -248,4 +224,37 @@ type Balance struct {
 	Currency         string        `json:"currency"`
 	Timestamp        uint          `json:"timestamp"`
 	Error            ErrorResponse `json:"error"`
+}
+
+type ErrorResponseV3 struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	Help    string `json:"help"`
+	TraceID string `json:"trace_id"`
+}
+
+type Calendar struct {
+	StartTime       string `json:"start_time"`
+	BlockOutTimeUtc string `json:"block_out_time_utc"`
+	SellingPrice    string `json:"selling_price"`
+	TOCSellingPrice string `json:"toc_selling_price"`
+	Inventory       uint32 `json:"inventory"`
+}
+
+type Calendars struct {
+	Month    string     `json:"month"`
+	Calendar []Calendar `json:"calendars"`
+}
+
+type Schedule struct {
+	SKUID         uint        `json:"sku_id"`
+	PublishStatus uint        `json:"publish_status"`
+	Currency      string      `json:"currency"`
+	Calendars     []Calendars `json:"calendars"`
+}
+
+type Schedules struct {
+	Success   bool            `json:"success"`
+	Schedules []Schedule      `json:"schedules"`
+	Error     ErrorResponseV3 `json:"error"`
 }

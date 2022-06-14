@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	net "net/url"
 
 	"github.com/asaskevich/govalidator"
 )
@@ -33,7 +34,7 @@ func (gateway *Gateway) SetHeader() []Header {
 				Value: "application/json",
 			},
 			Header{
-				Key:   "Accepts-Language",
+				Key:   "Accept-Language",
 				Value: "id_ID",
 			},
 		}
@@ -48,7 +49,7 @@ func (gateway *Gateway) SetHeader() []Header {
 				Value: "application/json",
 			},
 			Header{
-				Key:   "Accepts-Language",
+				Key:   "Accept-Language",
 				Value: "id_ID",
 			},
 		}
@@ -212,17 +213,17 @@ func (gateway *Gateway) CancelOrder(hash string) (Cancellation, error) {
 	return resp, nil
 }
 
-// Get Schedule
+// Get Sku price & stock schedules
 func (gateway *Gateway) GetSchedule(req ScheduleRequest) (Schedules, error) {
 	var resp Schedules
-	var url = gateway.Client.APIEnvType.String() + "/v2/products/" + req.ProductID + "/schedules"
+	var url = gateway.Client.APIEnvType.String() + "/v3/products/skus/" + req.SKUID + "/schedules"
 
-	params := "?start_date=" + req.StartDate + "&end_date=" + req.EndDate
+	params := "?start_time=" + net.PathEscape(req.StartTime) + "&end_time=" + net.PathEscape(req.StartTime)
 
 	headers := gateway.SetHeader()
 
 	_ = gateway.Client.Call("GET", url+params, headers, nil, &resp)
-	if !govalidator.IsNull(resp.Error.Code) {
+	if !govalidator.IsNull(resp.Error.Status) {
 		return resp, errors.New(resp.Error.Message)
 	}
 

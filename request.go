@@ -53,16 +53,16 @@ type OrderRequest struct {
 	Contact         Contact      `json:"contact"`
 }
 
-type ScheduleRequest struct {
-	ProductID string `json:"product_id"`
-	Language  string `json:"lang"`
-	StartDate string `json:"start_date"`
-	EndDate   string `json:"end_date"`
-}
-
 type ActivityRequest struct {
 	Page      uint `json:"page"`
 	PageSize  uint `json:"page_size"`
 	CountryID uint `json:"country_id"`
 	CityID    uint `json:"city_id"`
+}
+
+type ScheduleRequest struct {
+	SKUID     string `json:"sku_id"`
+	Language  string `json:"lang"`
+	StartTime string `json:"start_time"`
+	EndTime   string `json:"end_time"`
 }
