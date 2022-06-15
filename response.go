@@ -226,6 +226,12 @@ type Balance struct {
 	Error            ErrorResponse `json:"error"`
 }
 
+type SKU struct {
+	SKUID    string  `json:"sku_id"`
+	Currency string  `json:"currency"`
+	Price    float32 `json:"price"`
+}
+
 type ErrorResponseV3 struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
