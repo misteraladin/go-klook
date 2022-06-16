@@ -66,3 +66,8 @@ type ScheduleRequest struct {
 	StartTime string `json:"start_time"`
 	EndTime   string `json:"end_time"`
 }
+
+type ActivityDetailRequest struct {
+	ActivityID string `json:"activity_id"`
+	Language   string `json:"lang"`
+}

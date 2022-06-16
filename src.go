@@ -14,8 +14,13 @@ type Gateway struct {
 	Client Client
 }
 
-func (gateway *Gateway) SetHeader() []Header {
+func (gateway *Gateway) SetHeader(lang string) []Header {
 	var headers []Header
+
+	languange := "id_ID"
+	if len(lang) > 0 {
+		languange = lang
+	}
 
 	if len(gateway.Client.APIKey) == 0 {
 		token, err := gateway.GetToken()
@@ -35,7 +40,7 @@ func (gateway *Gateway) SetHeader() []Header {
 			},
 			Header{
 				Key:   "Accept-Language",
-				Value: "id_ID",
+				Value: languange,
 			},
 		}
 	} else {
@@ -50,7 +55,7 @@ func (gateway *Gateway) SetHeader() []Header {
 			},
 			Header{
 				Key:   "Accept-Language",
-				Value: "id_ID",
+				Value: languange,
 			},
 		}
 	}
@@ -92,7 +97,7 @@ func (gateway *Gateway) GetCountry() Countries {
 	var resp Countries
 	var url = gateway.Client.APIEnvType.String() + "/v2/countries"
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	_ = gateway.Client.Call("GET", url, headers, nil, &resp)
 
@@ -106,18 +111,18 @@ func (gateway *Gateway) GetActivities(req ActivityRequest) Activities {
 
 	params := fmt.Sprintf("?page=%d&page_size=%d&country_id=%d&city_id=%d", req.Page, req.PageSize, req.CountryID, req.CityID)
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	_ = gateway.Client.Call("GET", url+params, headers, nil, &resp)
 
 	return resp
 }
 
-// Get Detail Activity
-func (gateway *Gateway) GetDetailActivity(activity_id string) (DetailActivityResponse, error) {
+// Get Detail Activity v3
+func (gateway *Gateway) GetDetailActivity(req ActivityDetailRequest) (DetailActivityResponse, error) {
 	var resp DetailActivityResponse
-	var url = gateway.Client.APIEnvType.String() + "/v2/activities/" + activity_id
-	headers := gateway.SetHeader()
+	var url = gateway.Client.APIEnvType.String() + "/v3/activities/" + req.ActivityID
+	headers := gateway.SetHeader(req.Language)
 
 	_ = gateway.Client.Call("GET", url, headers, nil, &resp)
 
@@ -137,7 +142,7 @@ func (gateway *Gateway) CreateOrder(r OrderRequest) (Order, error) {
 	var resp Order
 	var url = gateway.Client.APIEnvType.String() + "/v2/orders"
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	jsonReq, _ := json.Marshal(r)
 
@@ -154,7 +159,7 @@ func (gateway *Gateway) CekAvailability(r AvailabilityRequest) (bool, error) {
 	var resp Availablilty
 	var url = gateway.Client.APIEnvType.String() + "/v2/orders/request"
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	jsonReq, _ := json.Marshal(r)
 
@@ -172,7 +177,7 @@ func (gateway *Gateway) GetDetailOrder(hash string) (OrderDetail, error) {
 	var resp OrderDetail
 	var url = gateway.Client.APIEnvType.String() + "/v2/orders/" + hash
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	_ = gateway.Client.Call("GET", url, headers, nil, &resp)
 	if !resp.Success {
@@ -187,7 +192,7 @@ func (gateway *Gateway) ResendVoucher(hash string) (bool, error) {
 	var resp Availablilty
 	var url = gateway.Client.APIEnvType.String() + "/v2/orders/" + hash + "/resend_voucher"
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	_ = gateway.Client.Call("GET", url, headers, nil, &resp)
 	if !resp.Success {
@@ -203,7 +208,7 @@ func (gateway *Gateway) CancelOrder(hash string) (Cancellation, error) {
 	var resp Cancellation
 	var url = gateway.Client.APIEnvType.String() + "/v2/orders/" + hash + "/cancel"
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	_ = gateway.Client.Call("POST", url, headers, nil, &resp)
 	if !resp.Success {
@@ -213,14 +218,14 @@ func (gateway *Gateway) CancelOrder(hash string) (Cancellation, error) {
 	return resp, nil
 }
 
-// Get Sku price & stock schedules
-func (gateway *Gateway) GetSchedule(req ScheduleRequest) (Schedules, error) {
-	var resp Schedules
+// Get Sku price & stock schedules v3
+func (gateway *Gateway) GetSchedule(req ScheduleRequest) (SchedulesResponse, error) {
+	var resp SchedulesResponse
 	var url = gateway.Client.APIEnvType.String() + "/v3/products/skus/" + req.SKUID + "/schedules"
 
 	params := "?start_time=" + net.PathEscape(req.StartTime) + "&end_time=" + net.PathEscape(req.StartTime)
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader(req.Language)
 
 	_ = gateway.Client.Call("GET", url+params, headers, nil, &resp)
 	if !govalidator.IsNull(resp.Error.Status) {
@@ -234,7 +239,7 @@ func (gateway *Gateway) GetBalance() (Balance, error) {
 	var resp Balance
 	var url = gateway.Client.APIEnvType.String() + "/v2/balance"
 
-	headers := gateway.SetHeader()
+	headers := gateway.SetHeader("")
 
 	_ = gateway.Client.Call("GET", url, headers, nil, &resp)
 	if !govalidator.IsNull(resp.Error.Code) {

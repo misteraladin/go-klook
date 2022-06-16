@@ -122,12 +122,6 @@ type ActivitySimple struct {
 	Price       float32           `json:"price"`
 }
 
-type SubCategory struct {
-	CategoryID  uint   `json:"category_id"​`
-	Category    string `json:"category"​`
-	Description string `json:"description"​`
-}
-
 type Activities struct {
 	Success    bool             `json:"success"`
 	Total      uint             `json:"total"`
@@ -162,74 +156,12 @@ type ExtraInfo struct {
 	Travelers []ExtraInfoTraveler `json:"travelers"`
 }
 
-// Product
-type Product struct {
-	ProductID           string       `json:"product_id"`
-	Title               string       `json:"title"`
-	Detail              string       `json:"detail"`
-	SKUS                []SKUProduct `json:"skus"`
-	ExtraInfo           ExtraInfo    `json:"extra_info"`
-	ConfirmationType    string       `json:"confirmation_type"`
-	CancelationType     string       `json:"cancelation_type"`
-	VoucherUsage        string       `json:"voucher_usage"`
-	ConfirmationDetails string       `json:"confirmation_details"`
-	VoucherTypeDesc     string       `json:"voucher_type_desc"`
-	VoucherValidity     string       `json:"voucher_validity"`
-	RedemptionProcess   string       `json:"redemption_process"`
-	VoucherIdentity     string       `json:"voucher_identity"`
-	OpenHours           string       `json:"open_hours"`
-	Transportation      string       `json:"transportation"`
-	PickUpProcedure     string       `json:"pick_up_procedure"`
-	ProductMinPax       uint         `json:"product_min_pax"`
-	ProductMaxPax       uint         `json:"product_max_pax"`
-}
-
-// Detail Activity
-type Activity struct {
-	ActivityID          uint              `json:"activity_id"`
-	Title               string            `json:"title"`
-	Subtitle            string            `json:"subtitle"`
-	CityID              uint              `json:"city_id"`
-	City                string            `json:"city"`
-	CountryID           uint              `json:"country_id"`
-	Country             string            `json:"country"`
-	CategoryID          uint              `json:"category_id"`
-	Category            string            `json:"category"`
-	Subcategories       []SubCategory     `json:"subcategories"`
-	Duration            string            `json:"duration"`
-	Language            string            `json:"language"`
-	Travellers          string            `json:"travellers"`
-	Transport           string            `json:"transport"`
-	Confirmation        string            `json:"confirmation"`
-	Refund              string            `json:"refund"`
-	TermsConditions     string            `json:"terms_and_conditions"`
-	Giudelines          string            `json:"giudelines"`
-	Usage               string            `json:"usage"`
-	ActivityInformation string            `json:"activity_information"`
-	Geolocation         string            `json:"geolocation"`
-	VideoURL            string            `json:"video_url"`
-	Thumbnail           ActivityThumbnail `json:"thumbnail"`
-	Products            []Product         `json:"products"`
-}
-
-type DetailActivityResponse struct {
-	Success  bool          `json:"success"`
-	Activity Activity      `json:"activity"`
-	Error    ErrorResponse `json:"error"`
-}
-
 type Balance struct {
 	Success          bool          `json:"success"`
 	RemainingBalance string        `json:"remaining_balance"`
 	Currency         string        `json:"currency"`
 	Timestamp        uint          `json:"timestamp"`
 	Error            ErrorResponse `json:"error"`
-}
-
-type SKU struct {
-	SKUID    string  `json:"sku_id"`
-	Currency string  `json:"currency"`
-	Price    float32 `json:"price"`
 }
 
 type ErrorResponseV3 struct {
@@ -252,6 +184,7 @@ type Calendars struct {
 	Calendar []Calendar `json:"calendars"`
 }
 
+// Schedule v3
 type Schedule struct {
 	SKUID         uint        `json:"sku_id"`
 	PublishStatus uint        `json:"publish_status"`
@@ -259,8 +192,96 @@ type Schedule struct {
 	Calendars     []Calendars `json:"calendars"`
 }
 
-type Schedules struct {
+type SchedulesResponse struct {
 	Success   bool            `json:"success"`
 	Schedules []Schedule      `json:"schedules"`
 	Error     ErrorResponseV3 `json:"error"`
+}
+
+// Detail Activity v3
+type Activity struct {
+	ActivityID           uint      `json:"activity_id"`
+	Title                string    `json:"title"`
+	Subtitle             string    `json:"subtitle"`
+	SupportedLanguages   []string  `json:"supported_languages"`
+	AvailableDate        string    `json:"available_date"`
+	Location             string    `json:"location"`
+	AddressDescMultilang string    `json:"Address_desc_multilang"`
+	Currency             string    `json:"currency"`
+	Price                string    `json:"price"`
+	TOCPrice             string    `json:"toc_price"`
+	HasMSP               bool      `json:"has_msp"`
+	Images               []Image   `json:"images"`
+	CityInfo             []CityV3  `json:"city_info"`
+	CategoryInfo         Category  `json:"category_info"`
+	SectionInfo          []Section `json:"section_info"`
+	PackageList          []Package `json:"package_list"`
+}
+
+type DetailActivityResponse struct {
+	Success  bool          `json:"success"`
+	Activity Activity      `json:"activity"`
+	Error    ErrorResponse `json:"error"`
+}
+
+type Image struct {
+	ImageAlt     string `json:"image_alt"`
+	ImageDesc    string `json:"image_desc"`
+	Width        uint   `json:"width"`
+	Height       uint   `json:"height"`
+	ImageType    string `json:"image_type"`
+	ImageUrlHost string `json:"image_url_host"`
+}
+
+type CityV3 struct {
+	CityID      uint   `json:"city_id"`
+	CityName    string `json:"city_name"`
+	CountryID   uint   `json:"country_id"`
+	CountryName string `json:"country_name"`
+}
+
+type Category struct {
+	SubCategoryID    uint   `json:"sub_category_id"`
+	SubCategoryNAme  string `json:"sub_category_name"`
+	LeafCategoryID   uint   `json:"leaf_category_id"`
+	LeafCategoryName string `json:"leaf_category_name"`
+}
+
+type Section struct {
+	SectionName string  `json:"section_name"`
+	Groups      []Group `json:"Groups"`
+}
+
+type Group struct {
+	GroupName     string `json:"group_name"`
+	GroupType     uint   `json:"group_type"`
+	GroupTypeName string `json:"group_type_name"`
+	RefFieldTag   string `json:"ref_field_tag"`
+	Content       string `json:"content"`
+}
+
+type Package struct {
+	PackageID                 uint      `json:"package_id"`
+	PackageName               string    `json:"package_name"`
+	PackageMinPax             uint      `json:"package_min_pax"`
+	PackageMaxPax             uint      `json:"package_max_pax"`
+	CancellationType          int       `json:"cancellation_type"`
+	CancellationTypeMultilang string    `json:"cancellation_type_multilang"`
+	VoucherUsage              uint      `json:"voucher_usage"`
+	VoucherUsageMultilang     string    `json:"voucher_usage_multilang"`
+	TimeSlotType              uint      `json:"timeslot_type"`
+	Instant                   uint      `json:"instant"`
+	TicketType                uint      `json:"ticket_type"`
+	SectionInfo               []Section `json:"section_info"`
+	SKUList                   []SKU     `json:"sku_list"`
+}
+
+type SKU struct {
+	SKUID     uint   `json:"sku_id"`
+	MinAge    uint   `json:"min_age"`
+	MaxAge    uint   `json:"max_age"`
+	SKUMaxPax uint   `json:"sku_max_pax"`
+	SKUMinPax uint   `json:"sku_min_pax"`
+	Title     string `json:"title"`
+	Required  bool   `json:"required"`
 }
