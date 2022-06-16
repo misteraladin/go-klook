@@ -277,11 +277,13 @@ type Package struct {
 }
 
 type SKU struct {
-	SKUID     uint   `json:"sku_id"`
-	MinAge    uint   `json:"min_age"`
-	MaxAge    uint   `json:"max_age"`
-	SKUMaxPax uint   `json:"sku_max_pax"`
-	SKUMinPax uint   `json:"sku_min_pax"`
-	Title     string `json:"title"`
-	Required  bool   `json:"required"`
+	SKUID     uint    `json:"sku_id"`
+	Currency  string  `json:"currency"`
+	Price     float32 `json:"price"`
+	MinAge    uint    `json:"min_age"`
+	MaxAge    uint    `json:"max_age"`
+	SKUMaxPax uint    `json:"sku_max_pax"`
+	SKUMinPax uint    `json:"sku_min_pax"`
+	Title     string  `json:"title"`
+	Required  bool    `json:"required"`
 }
